@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="th">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OPS System</title>
+    <link rel="stylesheet" href="?file=views/app.css">
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <div class="logo">OPS</div>
+        <nav>
+          <a href="#dashboard" class="nav-link" data-route="dashboard">แดชบอร์ด</a>
+          <a href="#orders" class="nav-link" data-route="orders">ออเดอร์</a>
+          <a href="#stock" class="nav-link" data-route="stock">สต็อก</a>
+          <a href="#receive" class="nav-link" data-route="receive">รับเข้า</a>
+          <a href="#shipments" class="nav-link" data-route="shipments">จัดส่ง</a>
+          <a href="#admin-users" class="nav-link" data-route="admin-users">ผู้ใช้งาน</a>
+        </nav>
+      </aside>
+      <main class="main">
+        <header class="topbar">
+          <div class="title">Order–Production–Stock–Delivery</div>
+          <div class="user" id="user-info">กำลังโหลด...</div>
+        </header>
+        <section class="content">
+          <div id="page-dashboard" class="page">
+            <?!= include('views/pages/dashboard'); ?>
+          </div>
+          <div id="page-orders" class="page hidden">
+            <?!= include('views/pages/orders'); ?>
+          </div>
+          <div id="page-order-detail" class="page hidden">
+            <?!= include('views/pages/order_detail'); ?>
+          </div>
+          <div id="page-stock" class="page hidden">
+            <?!= include('views/pages/stock'); ?>
+          </div>
+          <div id="page-receive" class="page hidden">
+            <?!= include('views/pages/receive'); ?>
+          </div>
+          <div id="page-shipments" class="page hidden">
+            <?!= include('views/pages/shipments'); ?>
+          </div>
+          <div id="page-admin-users" class="page hidden">
+            <?!= include('views/pages/admin_users'); ?>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <div id="pin-modal" class="modal hidden">
+      <div class="modal-card">
+        <h3>เข้าสู่ระบบด้วย PIN</h3>
+        <input type="password" id="pin-input" placeholder="PIN" />
+        <button class="btn" id="pin-submit">ยืนยัน</button>
+        <div class="hint">ผู้ใช้ที่ไม่ได้อยู่ในโดเมน Workspace จะต้องใช้ PIN</div>
+      </div>
+    </div>
+
+    <script>
+      window.APP_CONFIG = <?!= JSON.stringify(appConfig) ?>;
+    </script>
+    <script src="?file=views/app.js"></script>
+  </body>
+</html>

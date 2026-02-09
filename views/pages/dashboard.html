@@ -1,0 +1,23 @@
+<div class="grid grid-2">
+  <div class="card">
+    <h3>ออเดอร์ทั้งหมด</h3>
+    <div class="metric" id="dash-orders">0</div>
+  </div>
+  <div class="card">
+    <h3>การจัดส่ง</h3>
+    <div class="metric" id="dash-shipments">0</div>
+  </div>
+</div>
+<canvas id="dash-chart" width="600" height="280" class="card" style="margin-top:16px;"></canvas>
+<script>
+  const canvas = document.getElementById('dash-chart');
+  if (canvas) {
+    const ctx = canvas.getContext('2d');
+    ctx.fillStyle = '#e5e7eb';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = '#2f5bea';
+    [120, 200, 160, 220, 180].forEach((val, idx) => {
+      ctx.fillRect(50 + idx * 100, canvas.height - val, 40, val);
+    });
+  }
+</script>
