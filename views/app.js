@@ -1,3 +1,5 @@
+const hasBrowserWindow = typeof window !== 'undefined';
+
 const state = {
   me: null,
   orders: [],
@@ -16,7 +18,7 @@ const i18n = {
 };
 
 function getText(key) {
-  const locale = window.APP_CONFIG.locale || 'th';
+  const locale = (hasBrowserWindow && window.APP_CONFIG && window.APP_CONFIG.locale) || 'th';
   return (i18n[locale] && i18n[locale][key]) || key;
 }
 
@@ -163,4 +165,6 @@ async function init() {
   await loadUsers();
 }
 
-window.addEventListener('load', init);
+if (hasBrowserWindow) {
+  window.addEventListener('load', init);
+}
