@@ -1,6 +1,4 @@
-function getConfig_() {
-  const sheet = getSheet_(SHEETS.CONFIG);
-  const values = sheet.getDataRange().getValues();
+function configRowsToObject_(values) {
   const config = {};
   values.slice(1).forEach(row => {
     if (row[0]) {
@@ -10,12 +8,31 @@ function getConfig_() {
   return config;
 }
 
+function getConfig_() {
+  const sheet = getSheet_(SHEETS.CONFIG);
+  return configRowsToObject_(sheet.getDataRange().getValues());
+}
+
 function getSpreadsheet_() {
-  const config = getConfig_();
-  if (config.SpreadsheetId) {
-    return SpreadsheetApp.openById(config.SpreadsheetId);
+  const activeSpreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+
+  if (!activeSpreadsheet) {
+    throw new Error('No active spreadsheet. Bind this Apps Script project to a spreadsheet.');
   }
-  return SpreadsheetApp.getActiveSpreadsheet();
+
+  const configSheet = activeSpreadsheet.getSheetByName(SHEETS.CONFIG);
+  if (!configSheet) {
+    return activeSpreadsheet;
+  }
+
+  const config = configRowsToObject_(configSheet.getDataRange().getValues());
+  const configuredId = (config.SpreadsheetId || '').toString().trim();
+
+  if (!configuredId || configuredId === activeSpreadsheet.getId()) {
+    return activeSpreadsheet;
+  }
+
+  return SpreadsheetApp.openById(configuredId);
 }
 
 function getSheet_(name) {
