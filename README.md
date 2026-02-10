@@ -18,6 +18,7 @@ This is a production-ready MVP for SMEs built with Google Apps Script (V8), HTML
 
 2. **Copy Project Files**
    - Create the files listed in this repo within your Apps Script project.
+   - For frontend assets, create HTML files `views/app_style.html` and `views/app_script.html` (Apps Script does not execute standalone `.js/.css` web assets directly).
 
 3. **Set Config**
    - Run `seedDemoData()` once to create all sheets and headers.
