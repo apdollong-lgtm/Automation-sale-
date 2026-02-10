@@ -1,6 +1,4 @@
-function getConfig_() {
-  const sheet = getSheet_(SHEETS.CONFIG);
-  const values = sheet.getDataRange().getValues();
+function configRowsToObject_(values) {
   const config = {};
   values.slice(1).forEach(row => {
     if (row[0]) {
@@ -10,12 +8,44 @@ function getConfig_() {
   return config;
 }
 
+function getSpreadsheetIdFromScriptProperties_() {
+  const value = PropertiesService.getScriptProperties().getProperty('SpreadsheetId')
+    || PropertiesService.getScriptProperties().getProperty('SPREADSHEET_ID');
+  return (value || '').toString().trim();
+}
+
+function getConfig_() {
+  const sheet = getSheet_(SHEETS.CONFIG);
+  return configRowsToObject_(sheet.getDataRange().getValues());
+}
+
 function getSpreadsheet_() {
-  const config = getConfig_();
-  if (config.SpreadsheetId) {
-    return SpreadsheetApp.openById(config.SpreadsheetId);
+  const activeSpreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+
+  if (activeSpreadsheet) {
+    const configSheet = activeSpreadsheet.getSheetByName(SHEETS.CONFIG);
+    if (!configSheet) {
+      return activeSpreadsheet;
+    }
+
+    const config = configRowsToObject_(configSheet.getDataRange().getValues());
+    const configuredId = (config.SpreadsheetId || '').toString().trim();
+
+    if (!configuredId || configuredId === activeSpreadsheet.getId()) {
+      return activeSpreadsheet;
+    }
+
+    return SpreadsheetApp.openById(configuredId);
   }
-  return SpreadsheetApp.getActiveSpreadsheet();
+
+  const scriptPropertySpreadsheetId = getSpreadsheetIdFromScriptProperties_();
+  if (scriptPropertySpreadsheetId) {
+    return SpreadsheetApp.openById(scriptPropertySpreadsheetId);
+  }
+
+  throw new Error(
+    'No active spreadsheet. Either bind this Apps Script project to a spreadsheet or set Script Properties key SpreadsheetId (or SPREADSHEET_ID).'
+  );
 }
 
 function getSheet_(name) {
